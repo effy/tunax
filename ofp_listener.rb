@@ -13,8 +13,6 @@ class OFSecureChannel < Rev::TCPSocket
     def on_read(data)
     	@buffer << data
 
-	puts @buffer.unpack("H*")
-	
 	while @buffer.length >= 8
 	    header = OFPHeader.new
 	    header.load_from(@buffer)
@@ -25,15 +23,14 @@ class OFSecureChannel < Rev::TCPSocket
     end
 
     def on_message(header, payload)
-	puts "type:", header.type
-
     	case header.type
 	when OFPT_HELLO
 	    write header.header
 	when OFPT_ECHO_REQUEST
 	    reply_header = OFPHeader.new
-	    reply_header.init_with(header.version, OFPT_ECHO_REPLY, 8, header.xid)
+	    reply_header.init_with(header.version, OFPT_ECHO_REPLY, header.length, header.xid)
 	    write reply_header.header
+	    write payload
 	end
     end
 end
