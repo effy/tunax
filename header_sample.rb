@@ -3,14 +3,17 @@
 require 'openflow'
 
 #create header from ofp_header members
-h1 = OFPHeader.new(0, OFPT_ECHO_REQUEST, 8, 12345)
+h1 = OFPHeader.new
+h1.init_with(0, OFPT_ECHO_REQUEST, 8, 12345)
 
-#get header raw data
-h1_data = h1.raw_data
+#get opf_header
+header = h1.header
 
-p h1_data
+#you may send this header to switch
+p header
 
-#load ofp_header members from raw data
-h2 = OFPHeader.new(h1_data)
+#load ofp_header (from switch)
+h2 = OFPHeader.new
+h2.load_from(header)
 
 p h2.version, h2.type, h2.length, h2.xid
