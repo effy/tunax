@@ -8,4 +8,4 @@ puts h1.msg.unpack('H*') #get header(binary)
 
 h2 = OFPHeader.new
 h2.msg = h1.msg #set header(binary)
-p h2.version, h2.type, h2.len, h2.xid #obtain each member of the header
+p h2.version, h2.type, h2.length, h2.xid #obtain each member of the header

@@ -38,35 +38,32 @@ OFPT_QUEUE_GET_CONFIG_REQUEST = 20  # Controller/switch message
 OFPT_QUEUE_GET_CONFIG_REPLY = 21    # Controller/switch message
 
 ## opf_header ##
+=begin
+//Header on all OpenFlow packets.
+struct ofp_header {
+    uint8_t version;    /* OFP_VERSION. */
+    uint8_t type;       /* One of the OFPT_ constants. */
+    uint16_t length;    /* Length including this ofp_header. */
+    uint32_t xid;       /* Transaction id associated with this packet.
+                           Replies use the same id as was in the request
+                           to facilitate pairing. */
+};
+=end
 
 class OFPHeader
     def set(*args)
-        @version, @type, @len, @xid = args
+        @version, @type, @length, @xid = args
         @msg = args.pack("CCnN")
     end
 
     def msg=(value)
     	@msg = value[0,8]
-	@version, @type, @len, @xid = @msg.unpack("CCnN")
+	@version, @type, @length, @xid = @msg.unpack("CCnN")
     end
 
-    def msg
-        @msg
-    end
-
-    def version
-        @version
-    end
-
-    def type
-    	@type
-    end
-
-    def len
-    	@len
-    end
-
-    def xid
-	@xid
-    end
+    attr_reader :msg
+    attr_reader :version
+    attr_reader :type
+    attr_reader :length
+    attr_reader :xid
 end
