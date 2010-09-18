@@ -2,10 +2,15 @@
 
 require 'openflow'
 
-h1 = OFPHeader.new
-h1.set(0, OFPT_ECHO_REQUEST, 8, 12345) #create header
-puts h1.msg.unpack('H*') #get header(binary)
+#create header from ofp_header members
+h1 = OFPHeader.new(0, OFPT_ECHO_REQUEST, 8, 12345)
 
-h2 = OFPHeader.new
-h2.msg = h1.msg #set header(binary)
-p h2.version, h2.type, h2.length, h2.xid #obtain each member of the header
+#get header raw data
+h1_data = h1.raw_data
+
+p h1_data
+
+#load ofp_header members from raw data
+h2 = OFPHeader.new(h1_data)
+
+p h2.version, h2.type, h2.length, h2.xid

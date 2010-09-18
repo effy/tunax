@@ -51,17 +51,17 @@ struct ofp_header {
 =end
 
 class OFPHeader
-    def set(*args)
-        @version, @type, @length, @xid = args
-        @msg = args.pack("CCnN")
+    def initialize(*args)
+    	if args.length == 1
+	    @raw_data = args[0][0,8]
+	    @version, @type, @length, @xid = @raw_data.unpack("CCnN")
+	elsif args.length == 4
+	    @version, @type, @length, @xid = args
+	    @raw_data = args.pack("CCnN")
+	end
     end
 
-    def msg=(value)
-    	@msg = value[0,8]
-	@version, @type, @length, @xid = @msg.unpack("CCnN")
-    end
-
-    attr_reader :msg
+    attr_reader :raw_data
     attr_reader :version
     attr_reader :type
     attr_reader :length
