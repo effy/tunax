@@ -37,7 +37,7 @@ OFPT_BARRIER_REPLY = 19       # Controller/switch message
 OFPT_QUEUE_GET_CONFIG_REQUEST = 20  # Controller/switch message
 OFPT_QUEUE_GET_CONFIG_REPLY = 21    # Controller/switch message
 
-## opf_header ##
+## ofp_header ##
 =begin
 //Header on all OpenFlow packets.
 struct ofp_header {
