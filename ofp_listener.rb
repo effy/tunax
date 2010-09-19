@@ -14,21 +14,24 @@ class OFSecureChannel < Rev::TCPSocket
     	@buffer << data
 
 	while @buffer.length >= 8
-	    header = OFPHeader.create_from(@buffer)
-	    break if @buffer.length < header.length
-	    on_message(header, @buffer[8,header.length-8])
-	    @buffer.slice!(0, header.length)
+	    message = OFPMessage.create_from(@buffer)
+	    break if message == nil
+	    on_message(message)
+	    @buffer.slice!(0, message.length)
 	end
     end
 
-    def on_message(header, payload)
-    	case header.type
+    def on_message(message)
+	puts "type:#{message.header.msgtype}"
+    	case message.header.msgtype
 	when OFPT_HELLO
-	    write header.data
+	    write message.data
 	when OFPT_ECHO_REQUEST
-	    reply_header = OFPHeader.new(header.version, OFPT_ECHO_REPLY, header.length, header.xid)
-	    write reply_header.data
-	    write payload
+	    reply_hdr = OFPHeader.new(message.header.version, OFPT_ECHO_REPLY, message.header.length, message.header.xid)
+	    reply_msg = OFPMessage.new(reply_hdr, message.payload)
+	    write reply_msg.data
+	when OFPT_PACKET_IN
+	    puts message.payload.unpack("H*")
 	end
     end
 end
@@ -40,3 +43,4 @@ server = Rev::TCPServer.new(HOST, PORT, OFSecureChannel)
 server.attach(Rev::Loop.default)
 
 Rev::Loop.default.run
+

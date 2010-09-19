@@ -51,16 +51,36 @@ struct ofp_header {
 =end
 
 class OFPHeader
-    def initialize(version, type, length, xid)
-    	args = [version, type, length, xid]
-	(@version, @type, @length, @xid) = args
+    def initialize(version, msgtype, length, xid)
+    	args = [version, msgtype, length, xid]
+	@version, @msgtype, @length, @xid = args
 	@data = args.pack("CCnN")
     end
 
     def self.create_from(data)
-	new *data[0,8].unpack("CCnN")
+	new(*data.unpack("CCnN"))
     end
 
     attr_reader :data
-    attr_reader :version, :type, :length, :xid
+    attr_reader :version, :msgtype, :length, :xid
 end
+
+class OFPMessage
+    def initialize(header, payload)
+	@header, @payload = header, payload
+	@data = header.data + payload
+    end
+
+    def self.create_from(data)
+	header = OFPHeader.create_from(data)
+	data.length < header.length ? nil : new(header, data[8,header.length-8])
+    end
+
+    def length
+	@data.length
+    end
+
+    attr_reader :data
+    attr_reader :header, :payload
+end
+
