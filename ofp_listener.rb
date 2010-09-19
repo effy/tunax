@@ -14,8 +14,7 @@ class OFSecureChannel < Rev::TCPSocket
     	@buffer << data
 
 	while @buffer.length >= 8
-	    header = OFPHeader.new
-	    header.load_from(@buffer)
+	    header = OFPHeader.create_from(@buffer)
 	    break if @buffer.length < header.length
 	    on_message(header, @buffer[8,header.length-8])
 	    @buffer.slice!(0, header.length)
@@ -25,11 +24,10 @@ class OFSecureChannel < Rev::TCPSocket
     def on_message(header, payload)
     	case header.type
 	when OFPT_HELLO
-	    write header.header
+	    write header.data
 	when OFPT_ECHO_REQUEST
-	    reply_header = OFPHeader.new
-	    reply_header.init_with(header.version, OFPT_ECHO_REPLY, header.length, header.xid)
-	    write reply_header.header
+	    reply_header = OFPHeader.new(header.version, OFPT_ECHO_REPLY, header.length, header.xid)
+	    write reply_header.data
 	    write payload
 	end
     end

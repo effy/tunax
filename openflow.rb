@@ -51,17 +51,16 @@ struct ofp_header {
 =end
 
 class OFPHeader
-    def init_with(version, type, length, xid)
+    def initialize(version, type, length, xid)
     	args = [version, type, length, xid]
 	(@version, @type, @length, @xid) = args
-	@header = args.pack("CCnN")
+	@data = args.pack("CCnN")
     end
 
-    def load_from(header)
-	@header = header[0,8]
-	@version, @type, @length, @xid = @header.unpack("CCnN")
+    def self.create_from(data)
+	new *data[0,8].unpack("CCnN")
     end
 
-    attr_reader :header
+    attr_reader :data
     attr_reader :version, :type, :length, :xid
 end
