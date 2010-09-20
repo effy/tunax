@@ -6,7 +6,7 @@ require 'openflow'
 req_message = OFPMessage.new(OFPHeader.new(0,OFPT_ECHO_REQUEST,10,12345), "aa")
 
 # retrieve message
-data = req_message.data
+data = req_message.pack
 
 # dump the message (in hex format)
 puts data.unpack("H*")
@@ -19,5 +19,5 @@ puts data.unpack("H*")
 rep_message = OFPMessage.create_from(data)
 
 # obtain fields
-puts rep_message.header.msgtype, rep_message.header.xid, rep_message.payload
+puts rep_message.header.type, rep_message.header.xid, rep_message.payload
 
