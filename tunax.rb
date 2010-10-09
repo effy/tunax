@@ -1,7 +1,5 @@
-#!/usr/bin/ruby
-
 #
-#  TUNAX OpenFlow secure channel listener
+#  TUNAX
 #
 #  Copyright 2010 Toshio Koide
 #
@@ -20,10 +18,6 @@
 
 require 'rubygems'
 require 'rev'
-require 'tunax'
-
-listener = OFSecureChannelListener.new('0.0.0.0',6633,OFPHandler.new)
-listener.attach(Rev::Loop.default)
-
-Rev::Loop.default.run
-
+require 'tunax/openflow'
+require 'tunax/securechannel'
+require 'tunax/handler'
