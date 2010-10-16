@@ -93,7 +93,7 @@ class OFSecureChannel < Rev::TCPSocket
     end
 end
 
-# OpenFlow sechre channel listener
+# OpenFlow secure channel listener
 #
 class OFSecureChannelListener < Rev::TCPServer
     def initialize(host='0.0.0.0', port=6633, ofp_handler=nil)
