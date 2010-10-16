@@ -59,7 +59,6 @@ class OFPHandler
     end
 
     def on_packet_in(securechannel, message)
-	puts message.payload.unpack("H*")
     end
     
     def on_flow_removed(securechannel, message)
